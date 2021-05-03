@@ -13,4 +13,8 @@ if [ $? -eq 0 ]; then
  else
 	  echo "Process is not running.Starting  apache"
 	   sudo service apache2 start
+
   fi
+
+
+sudo update-rc.d apache2 enable 
