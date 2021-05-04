@@ -24,11 +24,31 @@ sudo update-rc.d apache2 enable
 name="ParthaSarathi"
 BucketName="upgrad-parthasarathi"
 timestamp=$(( date '+%d%m%Y-%H%M%S' ) )
+FILESIZE=$(stat -c%s "{name}-httpd-logs-${timestamp}.tar")
 
 cd  /var/log/apache2/ 
 tar -czvf ${name}-httpd-logs-${timestamp}.tar access.log error.log
 cp  ${name}-httpd-logs-${timestamp}.tar /tmp 
 aws s3 \
 	cp /tmp/${name}-httpd-logs-${timestamp}.tar \
-	s3://${BucketName}/${name}-httpd-logs-${timestamp}.tar
+	s3://${BucketName}/${name}-httpd-logs-${timestampi}.tar
 
+filname=${name}-httpd-logs-${timestamp}.tar
+FILESIZE=$(stat -c%s $filname)
+
+
+
+
+
+
+
+if [ ! -f /InventoryFolder/inventory.html ]
+then
+	mkdir /var/www/html/InventoryFolder # file.txt will come at the end of the script
+	cd  /var/www/html/InventoryFolder
+	touch inventory.html
+	chmod  777 inventory.html
+	echo  " Log Type         Time Created         Type        Size " >> inventory.html
+	echo  "  httpd-logs	$timestamp		tar	$FILESIZE " >> inventory.html
+											
+ fi
