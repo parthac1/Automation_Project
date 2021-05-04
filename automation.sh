@@ -1,3 +1,4 @@
+
 #!/bin/bash
 
 #check if you are  root user or not
@@ -18,3 +19,16 @@ if [ $? -eq 0 ]; then
 
 
 sudo update-rc.d apache2 enable 
+
+#to creat a TAr file and upload it into S3 Bucket
+name="ParthaSarathi"
+BucketName="upgrad-parthasarathi"
+timestamp=$(( date '+%d%m%Y-%H%M%S' ) )
+
+cd  /var/log/apache2/ 
+tar -czvf $name-httpd-logs-$timestamp.tar access.log error.log
+cp  $name-httpd-logs-$timestamp.tar /tmp 
+aws s3 \
+	cp /tmp/${name}-httpd-logs-${timestamp}.tar \
+	s3://${BucketName}/${myname}-httpd-logs-${timestamp}.tar
+
