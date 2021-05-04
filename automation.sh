@@ -33,8 +33,9 @@ aws s3 \
 	cp /tmp/${name}-httpd-logs-${timestamp}.tar \
 	s3://${BucketName}/${name}-httpd-logs-${timestampi}.tar
 
-filname=${name}-httpd-logs-${timestamp}.tar
-FILESIZE=$(stat -c%s $filname)
+filname="/tmp/${name}-httpd-logs-${timestamp}.tar"
+echo $filname
+FILESIZE=$(stat -c%s "$filname")
 
 
 
@@ -42,13 +43,20 @@ FILESIZE=$(stat -c%s $filname)
 
 
 
-if [ ! -f /InventoryFolder/inventory.html ]
+if [  -f /var/www/html/inventory.html ]
 then
-	mkdir /var/www/html/InventoryFolder # file.txt will come at the end of the script
-	cd  /var/www/html/InventoryFolder
+	 # file.txt will come at the end of the script
+	cd  /var/www/html/
+	#touch inventory.html
+	#chmod  777 inventory.html
+	#echo  " Log Type         Time Created         Type        Size \n " >> inventory.html
+	echo   "  httpd-logs	$timestamp		tar	$FILESIZE " >> inventory.html
+else
+	cd  /var/www/html/
 	touch inventory.html
-	chmod  777 inventory.html
-	echo  " Log Type         Time Created         Type        Size " >> inventory.html
-	echo  "  httpd-logs	$timestamp		tar	$FILESIZE " >> inventory.html
+        chmod  777 inventory.html
+        echo   " Log Type         Time Created         Type        Size " >> inventory.html	
+       	echo -e  "  httpd-logs     $timestamp           tar     $FILESIZE " >> inventory.html
 											
  fi
+ cat /var/www/html/inventory.sh
